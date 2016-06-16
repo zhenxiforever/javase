@@ -1,8 +1,9 @@
 package com.smile.javase.datastructure.database;
 
-public class PrimeNumber {
+import java.math.BigInteger;
+import java.util.Random;
 
-	protected int i ;
+public class PrimeNumber {
 	
 	/**
 	 * 判断是否为质数(素数)
@@ -32,7 +33,48 @@ public class PrimeNumber {
 	        }
 	    }
 		return true;
+		
+//		BigInteger primeNumber = new BigInteger(num.toString());
+//		return primeNumber.isProbablePrime(100);
 	}
+	
+	/**
+	 * 获取给定 二进制位数随机质数 
+	 *
+	 * @author lenovo
+	 * @data 2016年6月12日
+	 * @param bitLength
+	 * @return BigInteger
+	 */
+	public static BigInteger getPrimeNumber(int bitLength){
+		BigInteger one = BigInteger.ONE;
+		
+		Random rnd = new Random();
+		BigInteger base = new BigInteger("2");
+		BigInteger maxNum = base.pow(bitLength).subtract(one);
+		int numLength = maxNum.toString().length();
+		StringBuffer num = new StringBuffer();
+		for(int i=0;i<numLength;i++){
+			num.append(rnd.nextInt(9));
+		}
+		if(num!=null&&num.length()>0){
+			BigInteger result =  new BigInteger(num.toString());
+			if(!result.isProbablePrime(100)){
+				do{
+					result = result.add(one);
+					if(result.compareTo(maxNum)>0){
+						result =  new BigInteger(num.toString());
+						result = result.subtract(one);
+						one = new BigInteger("-1");
+					}
+				}while(result.isProbablePrime(100)&&result.compareTo(BigInteger.ONE)!=0);
+			}
+			return result;
+		}
+		return BigInteger.probablePrime(bitLength, rnd);
+		
+	}
+	
 	
 	/**
 	 * 判断两个数是否互质
